@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:23.0.0'
     //Google Translation API
     implementation 'com.google.mlkit:translate:17.0.2'
+    implementation 'androidx.activity:activity:1.8.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.0'

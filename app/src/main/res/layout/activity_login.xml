@@ -13,7 +13,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
-        android:text="Willkommen"
+        android:text="@string/title"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,41 +24,71 @@
         android:id="@+id/etLoginMail"
         android:layout_width="353dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="text"
-        android:text="E-Mail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tVLoginTitle" />
-
-    <EditText
-        android:id="@+id/editTextTextPassword"
-        android:layout_width="353dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etLoginMail"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLoginMail"
+        tools:ignore="LabelFor,SpeakableTextPresentCheck" />
 
     <Button
         android:id="@+id/btnLoginOk"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Anmelden"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        android:layout_marginTop="24dp"
+        android:text="@string/ok"
+        app:layout_constraintStart_toStartOf="@+id/etLoginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginPassword" />
 
     <Button
         android:id="@+id/btnLoginFalse"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:autofillHints=""
+        android:text="@string/nok"
+        app:layout_constraintEnd_toEndOf="@+id/etLoginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginPassword" />
+
+    <EditText
+        android:id="@+id/etLoginPassword"
+        android:layout_width="353dp"
+        android:layout_height="50dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLoginPW"
+        tools:ignore="LabelFor,TextFields,SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/tvLoginMail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/mail"
+        app:layout_constraintStart_toStartOf="@+id/etLoginMail"
+        app:layout_constraintTop_toBottomOf="@+id/tVLoginTitle" />
+
+    <TextView
+        android:id="@+id/tvLoginPW"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/passwort"
+        app:layout_constraintStart_toStartOf="@+id/etLoginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginMail" />
+
+    <TextView
+        android:id="@+id/tvLoginReg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Abbruch"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        android:text="@string/register"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoginFalse"
+        app:layout_constraintStart_toEndOf="@+id/btnLoginOk"
+        app:layout_constraintTop_toBottomOf="@+id/etLoginPassword" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

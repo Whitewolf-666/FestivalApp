@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">FestivalApp</string>
+    <string name="title">Text</string>
+    <string name="mail">Text</string>
+    <string name="ok">Text</string>
+    <string name="nok">Text</string>
+    <string name="passwort">Text</string>
+    <string name="pwsec">Text</string>
+    <string name="hinweis">Text</string>
+    <string name="register">Text</string>
+    <string name="caps">Text</string>
+    <string name="sonder">Text</string>
+    <string name="num">Text</string>
+    <string name="min">Text</string>
 </resources>
