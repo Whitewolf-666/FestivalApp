@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.mlkit.common.model.DownloadConditions;
 import com.google.mlkit.nl.translate.TranslateLanguage;
 import com.google.mlkit.nl.translate.Translation;
@@ -30,9 +32,9 @@ public class LoginActivity extends AppCompatActivity {
     private String sysSprache;
     private char spracheBekannt;
     private TextView loginTitle;
-    private TextView logintvPW;
-    private TextView logintvMail;
     private TextView loginReg;
+    private TextInputLayout loginTilMail;
+    private TextInputLayout loginTilPw;
     private EditText loginMail;
     private EditText loginPW;
     private Button loginOk;
@@ -53,9 +55,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         loginTitle = findViewById(R.id.tVLoginTitle);
-        logintvMail = findViewById(R.id.tvLoginMail);
-        logintvPW = findViewById(R.id.tvLoginMail);
-        loginMail = findViewById(R.id.etLoginMail);
+        loginTilMail = findViewById(R.id.tilLoginMail);
+        loginTilPw = findViewById(R.id.tilLoginPw);
+        loginMail = findViewById(R.id.edLoginMail);
         loginPW = findViewById(R.id.etLoginPassword);
         loginOk = findViewById(R.id.btnLoginOk);
         loginFalse = findViewById(R.id.btnLoginFalse);
@@ -65,8 +67,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (sysSprache.equals("de")) {
             loginTitle.setText(titel);
-            logintvMail.setText(email);
-            logintvPW.setText(passwort);
+            loginTilMail.setHint(email);
+            loginTilPw.setHint(passwort);
             loginOk.setText(ok);
             loginFalse.setText(nok);
             loginReg.setText(reg);
@@ -121,14 +123,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void uebersetzung(String typ, DownloadConditions downloadConditions, String quellText) {
-        /*transOption = new TranslatorOptions.Builder()
-                .setSourceLanguage("de")
-                .setTargetLanguage(zielSprache)
-                .build();
-        trans = Translation.getClient(transOption);
-        DownloadConditions downCond = new DownloadConditions.Builder()
-                .requireWifi().build();*/
-
         trans.downloadModelIfNeeded(downloadConditions)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -141,29 +135,17 @@ public class LoginActivity extends AppCompatActivity {
                                         Log.d(TAG, "Übersetzung erfolgreich: " + s);
                                         switch (typ){
                                             case "Titel":
-                                                titel = getString(R.string.title);
-                                                titel = s;
-                                                loginTitle.setText(titel);
+                                                loginTitle.setText(s);
                                             case "Mail":
-                                                email = getString(R.string.mail);
-                                                email = s;
-                                                logintvMail.setText(email);
+                                                loginTilMail.setHint(s);
                                             case "PW":
-                                                passwort = getString(R.string.passwort);
-                                                passwort = s;
-                                                logintvPW.setText(passwort);
+                                                loginTilPw.setHint(s);
                                             case "OK":
-                                                ok = getString(R.string.ok);
-                                                ok = s;
-                                                loginOk.setText(ok);
+                                                loginOk.setText(s);
                                             case "NOK":
-                                                nok = getString(R.string.nok);
-                                                nok = s;
-                                                loginFalse.setText(nok);
+                                                loginFalse.setText(s);
                                             case "Reg":
-                                                reg = getString(R.string.register);
-                                                reg = s;
-                                                loginReg.setText(reg);
+                                                loginReg.setText(s);
                                             default:
                                                 fehler = "Fehler";
                                         }
