@@ -1,7 +1,6 @@
 package com.example.festivalapp;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,21 +8,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.mlkit.common.model.DownloadConditions;
@@ -31,12 +23,13 @@ import com.google.mlkit.nl.translate.Translation;
 import com.google.mlkit.nl.translate.Translator;
 import com.google.mlkit.nl.translate.TranslatorOptions;
 
+import java.util.Objects;
+
 public class RegisActivity extends AppCompatActivity {
 
     private final String TAG = "RegisActivity";
     private DownloadConditions downCond;
     private Translator trans;
-    private TranslatorOptions transOption;
     private AlertDialog.Builder messageScrren;
     private TextView regTvTitel;
     private TextView regIcMin;
@@ -57,17 +50,7 @@ public class RegisActivity extends AppCompatActivity {
     private TextInputLayout regTilPw;
     private TextInputLayout regTilPwSec;
     private TextInputLayout regTilMail;
-    private String regTitel = "Registrierung";
     private String regMail = "E-Mail: ";
-    private String regPw = "Passwort: ";
-    private String regPwSecond = "Passwort wiederholen: ";
-    private String regPwAnf = "Anforderungen an das Passwort:";
-    private String regMin = "Mindestens 8 Zeichen";
-    private String regSond = "Mindestens 1 Sonderzeichen";
-    private String regNum = "Mindestens 1 Zahl";
-    private String regCaps = "Mindestens 1 Großbuchstabe";
-    private String btnOk = "Speichern";
-    private String btnNok = "Zurück";
     private String message;
     private boolean mailOK;
     private boolean pwOK;
@@ -80,7 +63,6 @@ public class RegisActivity extends AppCompatActivity {
     private int stelleNum = 0;
     private int stelleSond = 0;
     private FirebaseAuth regFbAut;
-    private FirebaseUser regFbUser;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -116,6 +98,16 @@ public class RegisActivity extends AppCompatActivity {
 
         messageScrren = new AlertDialog.Builder(RegisActivity.this);
 
+        String regTitel = "Registrierung";
+        String regPw = "Passwort: ";
+        String regPwSecond = "Passwort wiederholen: ";
+        String regPwAnf = "Anforderungen an das Passwort:";
+        String regMin = "Mindestens 8 Zeichen";
+        String regSond = "Mindestens 1 Sonderzeichen";
+        String regNum = "Mindestens 1 Zahl";
+        String regCaps = "Mindestens 1 Großbuchstabe";
+        String btnOk = "Speichern";
+        String btnNok = "Zurück";
         if(sysSprache.equals("de")){
             regTvTitel.setText(regTitel);
             regTvPwAnf.setText(regPwAnf);
@@ -130,7 +122,7 @@ public class RegisActivity extends AppCompatActivity {
             regTilPwSec.setHint(regPwSecond);
 
         }else{
-            transOption = new TranslatorOptions.Builder()
+            TranslatorOptions transOption = new TranslatorOptions.Builder()
                     .setSourceLanguage("de")
                     .setTargetLanguage(sysSprache)
                     .build();
@@ -163,11 +155,11 @@ public class RegisActivity extends AppCompatActivity {
                 boolean numOK;
                 boolean capsOK;
                 boolean sondOK;
-                Drawable regIcOk = getDrawable(R.drawable.ic_done);
-                Drawable regIcNok = getDrawable(R.drawable.ic_cancel);
+                @SuppressLint("UseCompatLoadingForDrawables") Drawable regIcOk = getDrawable(R.drawable.ic_done);
+                @SuppressLint("UseCompatLoadingForDrawables") Drawable regIcNok = getDrawable(R.drawable.ic_cancel);
 
                 if (regEdPw.getText().toString().trim().length() >= 8){
-                    if (enterPW==true){
+                    if (enterPW){
                         regIcMin.setCompoundDrawablesWithIntrinsicBounds(null, null, regIcOk, null);
                         checkLenOk = true;
                     }
@@ -179,7 +171,7 @@ public class RegisActivity extends AppCompatActivity {
                 enterPW = true;
 
                 numOK = checkPwNum(input);
-                if (numOK == true) {
+                if (numOK) {
                     if (stelleNum == 0){
                         stelleNum = regEdPw.getText().length();
                     }
@@ -200,7 +192,7 @@ public class RegisActivity extends AppCompatActivity {
                 }
 
                 capsOK = checkPwCaps(input);
-                if (capsOK == true) {
+                if (capsOK) {
                     if (stelleCap == 0){
                         stelleCap = regEdPw.getText().length();
                     }
@@ -221,7 +213,7 @@ public class RegisActivity extends AppCompatActivity {
                 }
 
                 sondOK = checkPwSond(input);
-                if (sondOK == true) {
+                if (sondOK) {
                     if (stelleSond == 0){
                         stelleSond = regEdPw.getText().length();
                     }
@@ -248,43 +240,32 @@ public class RegisActivity extends AppCompatActivity {
             }
         });
 
-        regBtnNok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                RegisActivity.super.getOnBackPressedDispatcher();
-            }
+        regBtnNok.setOnClickListener(view -> {
+            finish();
+            RegisActivity.super.getOnBackPressedDispatcher();
         });
 
-        regBtnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               regMail = regEdMail.getText().toString();
-               mailOK = checkMail(regMail);
-               if (mailOK == false){
-                   message = "Bitte geben Sie eine gültige E-Mail-Adresse ein";
-                    if (sysSprache.equals("de")){
-                       messageScrren.setMessage(message);
-                       messageScrren.setCancelable(true);
-                       messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int which) {
-                               dialog.cancel();
-                           }
-                       });
-                       AlertDialog errorSprache = messageScrren.create();
-                       errorSprache.show();
-                   }else{
-                        uebersetzung("Error", downCond, message);
-                   }
+        regBtnOk.setOnClickListener(view -> {
+           regMail = regEdMail.getText().toString();
+           mailOK = checkMail(regMail);
+           if (!mailOK){
+               message = "Bitte geben Sie eine gültige E-Mail-Adresse ein";
+                if (sysSprache.equals("de")){
+                   messageScrren.setMessage(message);
+                   messageScrren.setCancelable(true);
+                   messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
+                   AlertDialog errorSprache = messageScrren.create();
+                   errorSprache.show();
                }else{
-                   pwOK = checkPW(regEdPw.getText().toString().trim(), regEdPwSecond.getText().toString().trim());
+                    uebersetzung("Error", downCond, message);
                }
+           }else{
+               pwOK = checkPW(regEdPw.getText().toString().trim(), regEdPwSecond.getText().toString().trim());
+           }
 
-               if (mailOK == true && pwOK == true){
-                   createAccount();
-               }
-            }
+           if (mailOK && pwOK){
+               createAccount();
+           }
         });
     }
 
@@ -294,68 +275,46 @@ public class RegisActivity extends AppCompatActivity {
         String pw = regEdPw.getText().toString().trim();
 
         regFbAut.createUserWithEmailAndPassword(user, pw)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            FirebaseUser veryfiyUser = regFbAut.getCurrentUser();
-                            veryfiyUser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    message = "Sie wurden erfoglreich registriert. Eine Bestätigungsmail wurde an die angegebene E-Mail-Adresse versendet.";
-                                    if (sysSprache.equals("de")){
-                                        messageScrren.setMessage(message);
-                                        messageScrren.setCancelable(true);
-                                        messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                finish();
-                                                RegisActivity.super.getOnBackPressedDispatcher();
-                                            }
-                                        });
-                                        AlertDialog errorSprache = messageScrren.create();
-                                        errorSprache.show();
-                                    }else{
-                                        uebersetzung("OK", downCond, message);
-                                    }
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    message = "Es konnte keine Mail an die angegeben E-Mail-Adresse versendet werden: " + e.getMessage();
-                                    if (sysSprache.equals("de")){
-                                        messageScrren.setMessage(message);
-                                        messageScrren.setCancelable(true);
-                                        messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                                        AlertDialog errorSprache = messageScrren.create();
-                                        errorSprache.show();
-                                    }else{
-                                        uebersetzung("Error", downCond, message);
-                                    }
-                                }
-                            });
-
-                        }else{
-                            message = "Ihr Profil konnte nicht angelegt werden: " + task.getException().getMessage();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        FirebaseUser veryfiyUser = regFbAut.getCurrentUser();
+                        Objects.requireNonNull(veryfiyUser).sendEmailVerification().addOnSuccessListener(unused -> {
+                            message = "Sie wurden erfoglreich registriert. Eine Bestätigungsmail wurde an die angegebene E-Mail-Adresse versendet.";
                             if (sysSprache.equals("de")){
                                 messageScrren.setMessage(message);
                                 messageScrren.setCancelable(true);
-                                messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
+                                messageScrren.setNeutralButton("OK", (dialog, which) -> {
+                                    finish();
+                                    RegisActivity.super.getOnBackPressedDispatcher();
                                 });
+                                AlertDialog errorSprache = messageScrren.create();
+                                errorSprache.show();
+                            }else{
+                                uebersetzung("OK", downCond, message);
+                            }
+                        }).addOnFailureListener(e -> {
+                            message = "Es konnte keine Mail an die angegeben E-Mail-Adresse versendet werden: " + e.getMessage();
+                            if (sysSprache.equals("de")){
+                                messageScrren.setMessage(message);
+                                messageScrren.setCancelable(true);
+                                messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
                                 AlertDialog errorSprache = messageScrren.create();
                                 errorSprache.show();
                             }else{
                                 uebersetzung("Error", downCond, message);
                             }
+                        });
+
+                    }else{
+                        message = "Ihr Profil konnte nicht angelegt werden: " + Objects.requireNonNull(task.getException()).getMessage();
+                        if (sysSprache.equals("de")){
+                            messageScrren.setMessage(message);
+                            messageScrren.setCancelable(true);
+                            messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
+                            AlertDialog errorSprache = messageScrren.create();
+                            errorSprache.show();
+                        }else{
+                            uebersetzung("Error", downCond, message);
                         }
                     }
                 });
@@ -363,74 +322,52 @@ public class RegisActivity extends AppCompatActivity {
 
     private boolean checkPwSond(String passwort) {
         int pwDez = 0;
-        if (!passwort.equals("")){
-            pwDez = (int)passwort.charAt(0);
+        if (!passwort.isEmpty()){
+            pwDez = passwort.charAt(0);
         }
-        if (pwDez > 33 && pwDez < 48
-            || pwDez > 57 && pwDez < 65
-            || pwDez > 90 && pwDez < 97
-            || pwDez > 123){
-            return true;
-        }else{
-            return false;
-        }
+        return pwDez > 33 && pwDez < 48
+                || pwDez > 57 && pwDez < 65
+                || pwDez > 90 && pwDez < 97
+                || pwDez > 123;
     }
 
     private boolean checkPwCaps(String passwort) {
         final String regexCaps = "[A-Z]";
 
-        if (passwort.matches(regexCaps)){
-            return true;
-        }else{
-            return false;
-        }
+        return passwort.matches(regexCaps);
     }
 
     private boolean checkPwNum(String passwort) {
         final String regexNum = "[0-9]";
 
-        if (passwort.matches(regexNum)){
-            return true;
-        }else{
-            return false;
-        }
+        return passwort.matches(regexNum);
     }
 
     private boolean checkPW(String pw, String pwWieder) {
 
-        if (checkCapsOk == false
-         || checkNumOk == false
-         || checkSondOk == false
-         || checkLenOk == false){
+        if (!checkCapsOk
+         || !checkNumOk
+         || !checkSondOk
+         || !checkLenOk){
             message = "Anforderungen an das Passwort wurden nicht erfüllt!";
             if (sysSprache.equals("de")){
 
                 messageScrren.setMessage(message);
                 messageScrren.setCancelable(true);
-                messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
                 AlertDialog errorSprache = messageScrren.create();
                 errorSprache.show();
             }else{
                 uebersetzung("Error", downCond, message);
             }
             return false;
-        }else if (pw.equals("") || pwWieder.equals("")){
+        }else if (pw.isEmpty() || pwWieder.isEmpty()){
             message = "Beide Felder für die Passwörter müssen gefüllt sein!";
             if (sysSprache.equals("de")){
 
                 messageScrren.setMessage(message);
                 messageScrren.setCancelable(true);
-                messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
                 AlertDialog errorSprache = messageScrren.create();
                 errorSprache.show();
             }else{
@@ -443,12 +380,7 @@ public class RegisActivity extends AppCompatActivity {
                 if (sysSprache.equals("de")){
                     messageScrren.setMessage(message);
                     messageScrren.setCancelable(true);
-                    messageScrren.setNeutralButton("Error", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
+                    messageScrren.setNeutralButton("Error", (dialog, which) -> dialog.cancel());
                     AlertDialog errorSprache = messageScrren.create();
                     errorSprache.show();
                 }else{
@@ -471,88 +403,64 @@ public class RegisActivity extends AppCompatActivity {
 
     private void uebersetzung(String typ, DownloadConditions downloadConditions, String quellText) {
         trans.downloadModelIfNeeded(downloadConditions)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d(TAG, "Verbindung hergestellt");
-                        trans.translate(quellText)
-                                .addOnSuccessListener(new OnSuccessListener<String>() {
-                                    @Override
-                                    public void onSuccess(String s) {
-                                        Log.d(TAG, "Übersetzung erfolgreich: " + s);
-                                        if(typ.equals("Titel")){
-                                            regTvTitel.setText(s);
-                                        }
-                                        if(typ.equals("Mail")){
-                                            regTilMail.setHint(s);
-                                        }
-                                        if(typ.equals("PW")){
-                                            regTilPw.setHint(s);
-                                        }
-                                        if(typ.equals("PW2")){
-                                            regTilPwSec.setHint(s);
-                                        }
-                                        if(typ.equals("PWAnf")){
-                                            regTvPwAnf.setText(s);
-                                        }
-                                        if(typ.equals("PWMin")){
-                                            regTvMin.setText(s);
-                                        }
-                                        if(typ.equals("PWCaps")){
-                                            regTVCaps.setText(s);
-                                        }
-                                        if(typ.equals("PWNum")){
-                                            regTvNum.setText(s);
-                                        }
-                                        if(typ.equals("PWSond")){
-                                            regTvSond.setText(s);
-                                        }
-                                        if(typ.equals("BtnOk")){
-                                            regBtnOk.setText(s);
-                                        }
-                                        if(typ.equals("BtnNok")) {
-                                            regBtnNok.setText(s);
-                                        }
-                                        if (typ.equals("Error")){
-                                            messageScrren.setMessage(s);
-                                            messageScrren.setCancelable(true);
-                                            messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            AlertDialog errorSprache = messageScrren.create();
-                                            errorSprache.show();
-                                        }
-                                        if (typ.equals("OK")){
-                                            messageScrren.setMessage(s);
-                                            messageScrren.setCancelable(true);
-                                            messageScrren.setNeutralButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    finish();
-                                                    RegisActivity.super.getOnBackPressedDispatcher();
-                                                }
-                                            });
-                                            AlertDialog errorSprache = messageScrren.create();
-                                            errorSprache.show();
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG, "Fehler bei Übersetzung: " + e.getMessage());
-                                    }
-                                });
-                    }
+                .addOnSuccessListener(unused -> {
+                    Log.d(TAG, "Verbindung hergestellt");
+                    trans.translate(quellText)
+                            .addOnSuccessListener(s -> {
+                                Log.d(TAG, "Übersetzung erfolgreich: " + s);
+                                if(typ.equals("Titel")){
+                                    regTvTitel.setText(s);
+                                }
+                                if(typ.equals("Mail")){
+                                    regTilMail.setHint(s);
+                                }
+                                if(typ.equals("PW")){
+                                    regTilPw.setHint(s);
+                                }
+                                if(typ.equals("PW2")){
+                                    regTilPwSec.setHint(s);
+                                }
+                                if(typ.equals("PWAnf")){
+                                    regTvPwAnf.setText(s);
+                                }
+                                if(typ.equals("PWMin")){
+                                    regTvMin.setText(s);
+                                }
+                                if(typ.equals("PWCaps")){
+                                    regTVCaps.setText(s);
+                                }
+                                if(typ.equals("PWNum")){
+                                    regTvNum.setText(s);
+                                }
+                                if(typ.equals("PWSond")){
+                                    regTvSond.setText(s);
+                                }
+                                if(typ.equals("BtnOk")){
+                                    regBtnOk.setText(s);
+                                }
+                                if(typ.equals("BtnNok")) {
+                                    regBtnNok.setText(s);
+                                }
+                                if (typ.equals("Error")){
+                                    messageScrren.setMessage(s);
+                                    messageScrren.setCancelable(true);
+                                    messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
+                                    AlertDialog errorSprache = messageScrren.create();
+                                    errorSprache.show();
+                                }
+                                if (typ.equals("OK")){
+                                    messageScrren.setMessage(s);
+                                    messageScrren.setCancelable(true);
+                                    messageScrren.setNeutralButton("OK", (dialog, which) -> {
+                                        finish();
+                                        RegisActivity.super.getOnBackPressedDispatcher();
+                                    });
+                                    AlertDialog errorSprache = messageScrren.create();
+                                    errorSprache.show();
+                                }
+                            })
+                            .addOnFailureListener(e -> Log.d(TAG, "Fehler bei Übersetzung: " + e.getMessage()));
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Fehler bei Verbindung: " + e.getMessage());
-                    }
-                });
+                .addOnFailureListener(e -> Log.d(TAG, "Fehler bei Verbindung: " + e.getMessage()));
     }
 }
