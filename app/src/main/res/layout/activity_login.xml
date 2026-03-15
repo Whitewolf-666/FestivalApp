@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilLoginMail"
+        android:id="@+id/titleLoginMail"
         android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -30,7 +30,7 @@
         app:passwordToggleEnabled="false">
 
         <EditText
-            android:id="@+id/edLoginMail"
+            android:id="@+id/etLoginMail"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:autofillHints=""
@@ -41,13 +41,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilLoginPw"
+        android:id="@+id/titleLoginPW"
         android:layout_width="353dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilLoginMail"
+        app:layout_constraintTop_toBottomOf="@+id/titleLoginMail"
         app:passwordToggleEnabled="true">
 
         <EditText
@@ -66,18 +66,18 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="@+id/tilLoginPw"
-        app:layout_constraintTop_toBottomOf="@+id/tilLoginPw"
+        app:layout_constraintStart_toStartOf="@+id/titleLoginPW"
+        app:layout_constraintTop_toBottomOf="@+id/titleLoginPW"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
-        android:id="@+id/btnLoginFalse"
+        android:id="@+id/btnLoginEnd"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:autofillHints=""
-        app:layout_constraintEnd_toEndOf="@+id/tilLoginPw"
-        app:layout_constraintTop_toBottomOf="@+id/tilLoginPw"
+        app:layout_constraintEnd_toEndOf="@+id/titleLoginPW"
+        app:layout_constraintTop_toBottomOf="@+id/titleLoginPW"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
@@ -85,8 +85,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toStartOf="@+id/btnLoginFalse"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoginEnd"
         app:layout_constraintStart_toEndOf="@+id/btnLoginOk"
-        app:layout_constraintTop_toBottomOf="@+id/tilLoginPw" />
+        app:layout_constraintTop_toBottomOf="@+id/titleLoginPW" />
 
+    <TextView
+        android:id="@+id/tvLoginError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/btnLoginOk"
+        app:layout_constraintTop_toBottomOf="@+id/btnLoginOk" />
 </androidx.constraintlayout.widget.ConstraintLayout>

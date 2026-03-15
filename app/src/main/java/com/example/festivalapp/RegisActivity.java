@@ -408,56 +408,60 @@ public class RegisActivity extends AppCompatActivity {
                     trans.translate(quellText)
                             .addOnSuccessListener(s -> {
                                 Log.d(TAG, "Übersetzung erfolgreich: " + s);
-                                if(typ.equals("Titel")){
-                                    regTvTitel.setText(s);
-                                }
-                                if(typ.equals("Mail")){
-                                    regTilMail.setHint(s);
-                                }
-                                if(typ.equals("PW")){
-                                    regTilPw.setHint(s);
-                                }
-                                if(typ.equals("PW2")){
-                                    regTilPwSec.setHint(s);
-                                }
-                                if(typ.equals("PWAnf")){
-                                    regTvPwAnf.setText(s);
-                                }
-                                if(typ.equals("PWMin")){
-                                    regTvMin.setText(s);
-                                }
-                                if(typ.equals("PWCaps")){
-                                    regTVCaps.setText(s);
-                                }
-                                if(typ.equals("PWNum")){
-                                    regTvNum.setText(s);
-                                }
-                                if(typ.equals("PWSond")){
-                                    regTvSond.setText(s);
-                                }
-                                if(typ.equals("BtnOk")){
-                                    regBtnOk.setText(s);
-                                }
-                                if(typ.equals("BtnNok")) {
-                                    regBtnNok.setText(s);
-                                }
-                                if (typ.equals("Error")){
-                                    messageScrren.setMessage(s);
-                                    messageScrren.setCancelable(true);
-                                    messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
-                                    AlertDialog errorSprache = messageScrren.create();
-                                    errorSprache.show();
-                                }
-                                if (typ.equals("OK")){
-                                    messageScrren.setMessage(s);
-                                    messageScrren.setCancelable(true);
-                                    messageScrren.setNeutralButton("OK", (dialog, which) -> {
-                                        finish();
-                                        RegisActivity.super.getOnBackPressedDispatcher();
-                                    });
-                                    AlertDialog errorSprache = messageScrren.create();
-                                    errorSprache.show();
-                                }
+                                AlertDialog errorSprache;
+                                switch (typ){
+                                    case "Titel":
+                                        regTvTitel.setText(s);
+                                        break;
+                                    case "Mail":
+                                        regTilMail.setHint(s);
+                                        break;
+                                    case "PW":
+                                        regTilPw.setHint(s);
+                                        break;
+                                    case "PW2":
+                                        regTilPwSec.setHint(s);
+                                        break;
+                                    case "PWAnf":
+                                        regTvPwAnf.setText(s);
+                                        break;
+                                    case "PWMin":
+                                        regTvMin.setText(s);
+                                        break;
+                                    case "PWCaps":
+                                        regTVCaps.setText(s);
+                                        break;
+                                    case "PWNum":
+                                        regTvNum.setText(s);
+                                        break;
+                                    case "PWSond":
+                                        regTvSond.setText(s);
+                                        break;
+                                    case "BtnOK":
+                                        regBtnOk.setText(s);
+                                        break;
+                                    case "BtnNok":
+                                        regBtnNok.setText(s);
+                                        break;
+                                    case "Error":
+                                        messageScrren.setMessage(s);
+                                        messageScrren.setCancelable(true);
+                                        messageScrren.setNeutralButton("OK", (dialog, which) -> dialog.cancel());
+                                        errorSprache = messageScrren.create();
+                                        errorSprache.show();
+                                    case "OK":
+                                        messageScrren.setMessage(s);
+                                        messageScrren.setCancelable(true);
+                                        messageScrren.setNeutralButton("OK", (dialog, which) -> {
+                                            finish();
+                                            RegisActivity.super.getOnBackPressedDispatcher();
+                                        });
+                                        errorSprache = messageScrren.create();
+                                        errorSprache.show();
+                                    default:
+                                        Log.d(TAG, "Typ-Fehler: " + typ);
+                                        break;                                }
+
                             })
                             .addOnFailureListener(e -> Log.d(TAG, "Fehler bei Übersetzung: " + e.getMessage()));
                 })
